@@ -19,6 +19,7 @@ import numpy as np
 import tensorflow as tf
 import PIL.Image
 import dnnlib.tflib as tflib
+from tqdm import tqdm
 
 from training import dataset
 
@@ -516,10 +517,14 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
     if channels not in [1, 3]:
         error('Input images must be stored as RGB or grayscale')
 
-    with TFRecordExporter(tfrecord_dir, len(image_filenames)) as tfr:
+    with TFRecordExporter(tfrecord_dir, len(image_filenames), print_progress=False) as tfr:
         order = tfr.choose_shuffled_order() if shuffle else np.arange(len(image_filenames))
-        for idx in range(order.size):
-            img = np.asarray(PIL.Image.open(image_filenames[order[idx]]))
+        for idx in tqdm(range(order.size)):
+            im = PIL.Image.open(image_filenames[order[idx]])
+            img = np.asarray(im)
+            if img.ndim != 3:
+                im = im.convert("RGB")
+                img = np.asarray(im)
             if channels == 1:
                 img = img[np.newaxis, :, :] # HW => CHW
             else:
@@ -630,7 +635,7 @@ def execute_cmdline(argv):
                                             'create_from_hdf5 datasets/celebahq ~/downloads/celeba-hq-1024x1024.h5')
     p.add_argument(     'tfrecord_dir',     help='New dataset directory to be created')
     p.add_argument(     'hdf5_filename',    help='HDF5 archive containing the images')
-    p.add_argument(     '--shuffle',        help='Randomize image order (default: 1)', type=int, default=1)
+    p.add_argument(     '--shuffle',        help='Randomize image order (default: 1)', type=int, default=0)
 
     args = parser.parse_args(argv[1:] if len(argv) > 1 else ['-h'])
     func = globals()[args.command]

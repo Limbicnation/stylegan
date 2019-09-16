@@ -1,4 +1,4 @@
-## StyleGAN &mdash; Official TensorFlow Implementation
+## StyleGAN &mdash; Official TensorFlow Implementation - FP16 - 2080ti optimized version
 
 <a href="https://open-app.runwayml.com/?model=runway/stylegan" target="_blank"><img src="https://open-app.runwayml.com/gh-badge.svg" /></a>
 
@@ -10,7 +10,9 @@
 ![Teaser image](./stylegan-teaser.png)
 **Picture:** *These people are not real &ndash; they were produced by our generator that allows control over different aspects of the image.*
 
-This repository contains the official TensorFlow implementation of the following paper:
+This repository contains the official TensorFlow implementation of the following paper, modified for fp16 training using one RTX 2080ti, in general, it seems you can run 2x what you normally can, but I haven't been able to test on more than on 2080ti so if you have other configs, please submit PR.
+
+Also contains some stuff I'm experimenting on, I've turned it off, but be careful if you enable it in the code.
 
 > **A Style-Based Generator Architecture for Generative Adversarial Networks**<br>
 > Tero Karras (NVIDIA), Samuli Laine (NVIDIA), Timo Aila (NVIDIA)<br>
