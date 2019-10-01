@@ -251,6 +251,6 @@ python dataset_tool.py create_from_images datasets/Mauerfall4 ~/Images/190928_51
 ## Render Video
 
 1. run generate_fake_images.py
-2. selct desired "fake images" from the new "images" folder created
+2. select desired "fake images" from the new "images" folder created
 3. deactivate generate_fake_images.py 
-4. run generate_keyframed_video.py ( you can change framerate for this command --> generate_   keyframed_video(12, keyframes, mp4_fps=100)
+4. run generate_keyframed_video.py ( you can change framerate for this command --> generate_keyframed_video(12, keyframes, mp4_fps=100)
