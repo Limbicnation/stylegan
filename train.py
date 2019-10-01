@@ -35,7 +35,9 @@ if 1:
 
     # Dataset.
     #desc += '-Mauerfall';     dataset = EasyDict(tfrecord_dir='Mauerfall');                 train.mirror_augment = False; train.resume_run_id = 1
-    desc += '-Mauerfall2';     dataset = EasyDict(tfrecord_dir='Mauerfall2');                 train.mirror_augment = False
+    #desc += '-Mauerfall2';     dataset = EasyDict(tfrecord_dir='Mauerfall2');                 train.mirror_augment = False
+    #desc += '-Mauerfall3';     dataset = EasyDict(tfrecord_dir='Mauerfall3', resolution=512);                 train.mirror_augment = False
+    desc += '-Mauerfall4';     dataset = EasyDict(tfrecord_dir='Mauerfall4', resolution=512);                 train.mirror_augment = False
     #desc += '-ffhq512';  dataset = EasyDict(tfrecord_dir='ffhq', resolution=512); train.mirror_augment = True
     #desc += '-ffhq256';  dataset = EasyDict(tfrecord_dir='ffhq', resolution=256); train.mirror_augment = True
     #desc += '-celebahq'; dataset = EasyDict(tfrecord_dir='celebahq');             train.mirror_augment = True
