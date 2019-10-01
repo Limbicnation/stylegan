@@ -237,3 +237,20 @@ Please note that the exact results may vary from run to run due to the non-deter
 ## Acknowledgements
 
 We thank Jaakko Lehtinen, David Luebke, and Tuomas Kynk&auml;&auml;nniemi for in-depth discussions and helpful comments; Janne Hellsten, Tero Kuosmanen, and Pekka J&auml;nis for compute infrastructure and help with the code release.
+
+
+####
+
+## Tarining example
+
+## Style Gan training example:
+
+python dataset_tool.py create_from_images datasets/Mauerfall4 ~/Images/190928_512x512_Architecture/ && python train.py
+
+
+## Render Video
+
+1. run generate_fake_images.py
+2. selct desired "fake images" from the new "images" folder created
+3. deactivate generate_fake_images.py 
+4. run generate_keyframed_video.py ( you can change framerate for this command --> generate_   keyframed_video(12, keyframes, mp4_fps=100)
