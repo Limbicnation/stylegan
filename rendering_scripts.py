@@ -101,7 +101,7 @@ def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_s
 # Generate MP4 video of random interpolations using a previously trained network.
 # To run, uncomment the appropriate line in config.py and launch train.py.
 
-def generate_keyframed_video(run_id, latents_idx, subdir=None, snapshot=None, grid_size=[1,1], image_shrink=1, image_zoom=1, transition_frames = 25, smoothing_sec=1.0, mp4=None, mp4_fps=30, mp4_codec='libx265', mp4_bitrate='16M', random_seed=1000, minibatch_size=8):
+def generate_keyframed_video(run_id, latents_idx, subdir=None, snapshot=None, grid_size=[1,1], image_shrink=1, image_zoom=1, transition_frames = 60, smoothing_sec=1.0, mp4=None, mp4_fps=30, mp4_codec='libx265', mp4_bitrate='16M', random_seed=1000, minibatch_size=8):
     network_pkl = misc.locate_network_pkl(run_id, snapshot)
     print('Loading network from "%s"...' % network_pkl)
     G, D, Gs = misc.load_network_pkl(run_id, snapshot)
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     tfutil.init_tf()
    # generate_fake_images(12, num_pngs=100)
    # generate_interpolation_video(12, grid_size=[1,1], random_seed=int(time.time()), mp4_fps=25, duration_sec=300.0)
-    keyframes = [11,36,71,74,94]
+    keyframes = [50,125,225,300,325,375,425,450,475,550,575,600,630,650,690,740,780,800,900,950,980]
     generate_keyframed_video(12, keyframes)
     print('Exiting...')
     print(datetime.datetime.now())

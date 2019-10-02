@@ -248,9 +248,10 @@ We thank Jaakko Lehtinen, David Luebke, and Tuomas Kynk&auml;&auml;nniemi for in
 python dataset_tool.py create_from_images datasets/Mauerfall4 ~/Images/190928_512x512_Architecture/ && python train.py
 
 
-## Render Video
+## Render custom Video
 
 1. run generate_fake_images.py
 2. select desired "fake images" from the new "images" folder created
 3. deactivate generate_fake_images.py 
 4. run generate_keyframed_video.py ( you can change framerate for this command --> generate_keyframed_video(12, keyframes, mp4_fps=100)
+5. change fps with -> `transition_frames = 60`
