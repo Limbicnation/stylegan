@@ -518,6 +518,7 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
         error('Input images must be stored as RGB or grayscale')
 
     with TFRecordExporter(tfrecord_dir, len(image_filenames), print_progress=False) as tfr:
+        skipped = 0
         order = tfr.choose_shuffled_order() if shuffle else np.arange(len(image_filenames))
         for idx in tqdm(range(order.size)):
             im = PIL.Image.open(image_filenames[order[idx]])
@@ -529,7 +530,11 @@ def create_from_images(tfrecord_dir, image_dir, shuffle):
                 img = img[np.newaxis, :, :] # HW => CHW
             else:
                 img = img.transpose([2, 0, 1]) # HWC => CHW
-            tfr.add_image(img)
+            try:
+                tfr.add_image(img)
+            except:
+                skipped = skipped + 1
+                print(skipped, "failed image add...")
 
 #----------------------------------------------------------------------------
 
