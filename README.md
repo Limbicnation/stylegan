@@ -241,7 +241,7 @@ We thank Jaakko Lehtinen, David Luebke, and Tuomas Kynk&auml;&auml;nniemi for in
 
 ####
 
-## Tarining example
+## Training example
 
 ## Style Gan training example:
 
