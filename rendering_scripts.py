@@ -49,7 +49,7 @@ def generate_fake_images(run_id, snapshot=None, grid_size=[1,1], num_pngs=1, ima
         print('Generating png %d / %d...' % (png_idx, num_pngs))
         latents = random_latents(np.prod(grid_size), Gs, random_state=random_state)
         labels = np.zeros([latents.shape[0], 0], np.float32)
-        images = Gs.run(latents, labels, minibatch_size=minibatch_size, num_gpus=1, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8)
+        images = Gs.run(latents, labels, minibatch_size=minibatch_size, num_gpus=1, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8, randomize_noise=False)
         misc.save_image_grid(images, os.path.join(result_subdir, '%06d.png' % (png_idx)), [0,255], grid_size)
         np.save(result_subdir + "/" + '%06d' % (png_idx), latents)
 
@@ -83,7 +83,7 @@ def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_s
         frame_idx = int(np.clip(np.round(t * mp4_fps), 0, num_frames - 1))
         latents = all_latents[frame_idx]
         labels = np.zeros([latents.shape[0], 0], np.float32)
-        images = Gs.run(latents, labels, minibatch_size=minibatch_size, num_gpus=1, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8)
+        images = Gs.run(latents, labels, minibatch_size=minibatch_size, num_gpus=1, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8, randomize_noise=False)
         grid = misc.create_image_grid(images, grid_size).transpose(1, 2, 0) # HWC
         if image_zoom > 1:
             grid = scipy.ndimage.zoom(grid, [image_zoom, image_zoom, 1], order=0)
@@ -101,7 +101,7 @@ def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_s
 # Generate MP4 video of random interpolations using a previously trained network.
 # To run, uncomment the appropriate line in config.py and launch train.py.
 
-def generate_keyframed_video(run_id, latents_idx, subdir=None, snapshot=None, grid_size=[1,1], image_shrink=1, image_zoom=1, transition_frames = 60, smoothing_sec=1.0, mp4=None, mp4_fps=30, mp4_codec='libx265', mp4_bitrate='16M', random_seed=1000, minibatch_size=8):
+def generate_keyframed_video(run_id, latents_idx, subdir=None, snapshot=None, grid_size=[1,1], image_shrink=1, image_zoom=1, transition_frames = 120, smoothing_sec=1.0, mp4=None, mp4_fps=30, mp4_codec='libx265', mp4_bitrate='16M', random_seed=1000, minibatch_size=8):
     network_pkl = misc.locate_network_pkl(run_id, snapshot)
     print('Loading network from "%s"...' % network_pkl)
     G, D, Gs = misc.load_network_pkl(run_id, snapshot)
@@ -146,11 +146,12 @@ def generate_keyframed_video(run_id, latents_idx, subdir=None, snapshot=None, gr
 
         transition_i = frame_idx - section * transition_frames
         maxindex = transition_frames-1.0
-        mu1 = min(max(0, (transition_i*1.0/maxindex)*(transition_i*1.0/maxindex) ), 1)
-       #mu1 = min(max(0, (transition_i*1.0/maxindex) ), 1)
+        # mu1 = min(max(0, (transition_i*1.0/maxindex) ), 1)                             # linear interpolation
+        # mu1 = min(max(0, (transition_i*1.0/maxindex)*(transition_i*1.0/maxindex) ), 1) # quadratic interpolation
+        mu1 = min(max(0, 1 - math.cos(math.pi * transition_i / maxindex)), 2) / 2  # sine interpolation
         lat = np.multiply(start, 1.0-mu1)+ np.multiply(end, mu1)
         labels = np.zeros([lat.shape[0], 0], np.float32)
-        images = Gs.run(lat, labels, minibatch_size=minibatch_size, num_gpus=1, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8)
+        images = Gs.run(lat, labels, minibatch_size=minibatch_size, num_gpus=1, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8, randomize_noise=False)
         grid = misc.create_image_grid(images, grid_size).transpose(1, 2, 0) # HWC
         if image_zoom > 1:
             grid = scipy.ndimage.zoom(grid, [image_zoom, image_zoom, 1], order=0)
@@ -172,9 +173,9 @@ if __name__ == "__main__":
     print(datetime.datetime.now(), int(time.time()))
     np.random.seed(int(time.time()))
     tfutil.init_tf()
-   # generate_fake_images(12, num_pngs=100)
-   # generate_interpolation_video(12, grid_size=[1,1], random_seed=int(time.time()), mp4_fps=25, duration_sec=300.0)
-    keyframes = [50,125,225,300,325,375,425,450,475,550,575,600,630,650,690,740,780,800,900,950,980]
-    generate_keyframed_video(12, keyframes)
+    #generate_fake_images(00, num_pngs=2500)
+    #generate_interpolation_video(12, grid_size=[1,1], random_seed=int(time.time()), mp4_fps=25, duration_sec=300.0)
+    keyframes = [50,125,225,300,325,375,450,475,550,600,700,600,675,700,800,850,900,925,975,1075,1200,1350,1450,1575,1700,1800,1900,2050,2150,2250,2300,2450]
+    generate_keyframed_video(00, keyframes,mp4_fps=30)
     print('Exiting...')
     print(datetime.datetime.now())
