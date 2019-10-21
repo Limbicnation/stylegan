@@ -218,6 +218,7 @@ def training_loop(
     tick_start_nimg = cur_nimg
     prev_lod = -1.0
     while cur_nimg < total_kimg * 1000:
+        if sched.lod < 0.01: break
         if ctx.should_stop(): break
 
         # Choose training parameters and configure training ops.

@@ -16,6 +16,7 @@ import tensorflow as tf
 import scipy.ndimage
 import scipy.misc
 import imageio
+import math
 
 import config
 import training.misc as misc
@@ -173,9 +174,9 @@ if __name__ == "__main__":
     print(datetime.datetime.now(), int(time.time()))
     np.random.seed(int(time.time()))
     tfutil.init_tf()
-    #generate_fake_images(00, num_pngs=2500)
+    generate_fake_images(00, num_pngs=3500)
     #generate_interpolation_video(12, grid_size=[1,1], random_seed=int(time.time()), mp4_fps=25, duration_sec=300.0)
-    keyframes = [50,125,225,300,325,375,450,475,550,600,700,600,675,700,800,850,900,925,975,1075,1200,1350,1450,1575,1700,1800,1900,2050,2150,2250,2300,2450]
+    keyframes = [75,125,300,375,450,550,600,700,775,800,850,900,925,975,1075,1200,1350,1450,1575,1700,1800,1900,2050,2150,2250,2300,2375,2475,2800,2875,3000,3050,3125,3225,3300,3400]
     generate_keyframed_video(00, keyframes,mp4_fps=30)
     print('Exiting...')
     print(datetime.datetime.now())
